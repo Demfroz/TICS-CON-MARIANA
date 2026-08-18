@@ -1,0 +1,6 @@
+id,nombre,cargo,sueldo_base,bonificacion,horas_extras
+1,Ana Torres,Analista,2500,200,10
+2,Carlos Perez,Desarrollador,3200,350,0
+3,Maria Lopez,Administradora,2800,150,8
+4,Jose Ramirez,Tecnico,2100,100,20
+5,Lucia Flores,Contadora,3500,400,5

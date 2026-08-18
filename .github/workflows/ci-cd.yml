@@ -1,0 +1,83 @@
+name: CI/CD - Sistema de Planillas
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # ----------------------------- 1) BUILD -----------------------------
+  build:
+    name: BUILD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Validar que el codigo compile
+        run: python -m compileall .
+
+  # ----------------------------- 2) TEST ------------------------------
+  test:
+    name: TEST
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar pruebas unitarias
+        run: pytest -v
+
+  # ---------------------------- 3) DEPLOY -----------------------------
+  deploy:
+    name: DEPLOY
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Despliegue simulado (copiar a staging/)
+        run: |
+          mkdir -p staging
+          cp -r src data main.py requirements.txt README.md staging/
+          echo "Contenido desplegado:"
+          ls -R staging
+
+      - name: Ejecutar el sistema desde staging
+        run: |
+          cd staging
+          python main.py
+
+      - name: Resultado
+        run: echo "Despliegue exitoso"
+
+      - name: Guardar artefacto del despliegue
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging
+          path: staging/
