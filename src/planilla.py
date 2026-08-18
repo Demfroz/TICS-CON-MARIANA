@@ -80,9 +80,10 @@ def procesar_trabajador(trabajador):
         "horas_extras": trabajador.horas_extras,
         "sueldo_bruto": bruto,
         "descuentos": descuentos,
-        "sueldo_neto": neto    }
-qwfwf
-wqfwqfwq
+        "sueldo_neto": neto,
+    }
+
+
 def generar_planilla(trabajadores):
     """Procesa la lista completa de trabajadores."""
     return [procesar_trabajador(t) for t in trabajadores]
